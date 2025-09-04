@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ApexPlanet Task 4</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f9f9f9; }
+    header { background: #2c3e50; color: white; padding: 15px; text-align: center; }
+    nav button { margin: 5px; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; }
+    nav button.active { background: #3498db; color: white; }
+    section { display: none; padding: 30px; }
+    section.active { display: block; }
+
+    /* Portfolio Styling */
+    footer { background: #2c3e50; color: white; text-align: center; padding: 10px; margin-top: 20px; }
+    ul { list-style: none; padding: 0; }
+
+    /* To-Do List Styling */
+    #todo input, #todo button { padding: 10px; margin: 5px; }
+    #todo ul { list-style: none; padding: 0; }
+    #todo li { background: #fff; margin: 5px auto; padding: 10px; width: 250px; border-radius: 5px; }
+
+    /* Product Page Styling */
+    .product { border: 1px solid #ddd; margin: 10px; padding: 10px; border-radius: 5px; display: inline-block; width: 200px; background: #fff; }
+    select { margin: 10px; padding: 5px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>ApexPlanet – Task 4</h1>
+    <nav>
+      <button onclick="showSection('portfolio')" class="active">Portfolio</button>
+      <button onclick="showSection('todo')">To-Do List</button>
+      <button onclick="showSection('products')">Products</button>
+    </nav>
+  </header>
+
+  <!-- Portfolio Section -->
+  <section id="portfolio" class="active">
+    <h2>My Portfolio</h2>
+    <p>Welcome to my personal portfolio website built using HTML, CSS, and JavaScript.</p>
+    <h3>About Me</h3>
+    <p>I am a web development intern at ApexPlanet, passionate about creating responsive and interactive web applications.</p>
+
+    <h3>Projects</h3>
+    <ul>
+      <li>Task 1 – HTML Basics</li>
+      <li>Task 2 – CSS & Styling</li>
+      <li>Task 3 – Advanced JS</li>
+      <li>Task 4 – Full Project Implementation</li>
+    </ul>
+
+    <h3>Contact</h3>
+    <p>Email: example@gmail.com</p>
+    <p>LinkedIn: linkedin.com/in/example</p>
+  </section>
+
+  <!-- To-Do List Section -->
+  <section id="todo">
+    <h2>My To-Do List</h2>
+    <input type="text" id="task" placeholder="Enter task">
+    <button onclick="addTask()">Add</button>
+    <ul id="taskList"></ul>
+  </section>
+
+  <!-- Products Section -->
+  <section id="products">
+    <h2>Product Listing</h2>
+    <label>Filter by Category:</label>
+    <select id="categoryFilter" onchange="filterProducts()">
+      <option value="all">All</option>
+      <option value="electronics">Electronics</option>
+      <option value="clothing">Clothing</option>
+    </select>
+
+    <label>Sort by Price:</label>
+    <select id="sortOption" onchange="sortProducts()">
+      <option value="asc">Low to High</option>
+      <option value="desc">High to Low</option>
+    </select>
+
+    <div id="productsList"></div>
+  </section>
+
+  <footer>
+    <p>© 2025 ApexPlanet – Task 4 Implementation</p>
+  </footer>
+
+  <script>
+    // Navigation Function
+    function showSection(id) {
+      document.querySelectorAll("section").forEach(sec => sec.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+
+      document.querySelectorAll("nav button").forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
+    }
+
+    // To-Do List Functions
+    const taskList = document.getElementById("taskList");
+
+    function addTask() {
+      let task = document.getElementById("task").value;
+      if (task === "") return;
+      let li = document.createElement("li");
+      li.textContent = task;
+      taskList.appendChild(li);
+
+      saveTasks();
+      document.getElementById("task").value = "";
+    }
+
+    function saveTasks() {
+      localStorage.setItem("tasks", taskList.innerHTML);
+    }
+
+    function loadTasks() {
+      taskList.innerHTML = localStorage.getItem("tasks") || "";
+    }
+
+    // Product Listing Functions
+    let products = [
+      { name: "Laptop", category: "electronics", price: 800 },
+      { name: "T-Shirt", category: "clothing", price: 20 },
+      { name: "Headphones", category: "electronics", price: 100 },
+      { name: "Jeans", category: "clothing", price: 40 }
+    ];
+
+    function displayProducts(list) {
+      let container = document.getElementById("productsList");
+      container.innerHTML = "";
+      list.forEach(p => {
+        container.innerHTML += `<div class="product">
+          <h3>${p.name}</h3>
+          <p>Category: ${p.category}</p>
+          <p>Price: $${p.price}</p>
+        </div>`;
+      });
+    }
+
+    function filterProducts() {
+      let category = document.getElementById("categoryFilter").value;
+      let filtered = category === "all" ? products : products.filter(p => p.category === category);
+      displayProducts(filtered);
+    }
+
+    function sortProducts() {
+      let option = document.getElementById("sortOption").value;
+      let sorted = [...products].sort((a, b) => option === "asc" ? a.price - b.price : b.price - a.price);
+      displayProducts(sorted);
+    }
+
+    // Initialize
+    loadTasks();
+    displayProducts(products);
+  </script>
+</body>
+</html>
